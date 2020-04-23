@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	EPSILON = math.SmallestNonzeroFloat64
+	Epsilon = math.SmallestNonzeroFloat64
 )
 
 type Tuple struct {
@@ -30,16 +30,60 @@ func NewVector(x, y, z float64) Tuple {
 	}
 }
 
-func (t Tuple) Compare(to Tuple) bool {
-	return math.Abs(t.X-to.X) < EPSILON &&
-		math.Abs(t.Y-to.Y) < EPSILON &&
-		math.Abs(t.Z-to.Z) < EPSILON &&
-		math.Abs(t.W-to.W) < EPSILON
+func (t Tuple) Equal(to Tuple) bool {
+	return math.Abs(t.X-to.X) < Epsilon &&
+		math.Abs(t.Y-to.Y) < Epsilon &&
+		math.Abs(t.Z-to.Z) < Epsilon &&
+		math.Abs(t.W-to.W) < Epsilon
 }
 
-func Compare(t, t2 Tuple) bool {
-	return math.Abs(t.X-t2.X) < EPSILON &&
-		math.Abs(t.Y-t2.Y) < EPSILON &&
-		math.Abs(t.Z-t2.Z) < EPSILON &&
-		math.Abs(t.W-t2.W) < EPSILON
+func Equal(t, t2 Tuple) bool {
+	return math.Abs(t.X-t2.X) < Epsilon &&
+		math.Abs(t.Y-t2.Y) < Epsilon &&
+		math.Abs(t.Z-t2.Z) < Epsilon &&
+		math.Abs(t.W-t2.W) < Epsilon
+}
+
+func (t *Tuple) Negate() *Tuple {
+	t.X = -t.X
+	t.Y = -t.Y
+	t.Z = -t.Z
+	t.W = -t.W
+	return t
+}
+
+func (t Tuple) IsValid() bool {
+	return t.W == 1 || t.W == 0
+}
+
+func Add(t1, t2 Tuple) Tuple {
+	return Tuple{
+		X: t1.X + t2.X,
+		Y: t1.Y + t2.Y,
+		Z: t1.Z + t2.Z,
+		W: t1.W + t2.W,
+	}
+}
+
+func Sub(t1, t2 Tuple) Tuple {
+
+	t := Tuple{
+		X: t1.X - t2.X,
+		Y: t1.Y - t2.Y,
+		Z: t1.Z - t2.Z,
+		W: t1.W - t2.W,
+	}
+	if !t.IsValid() {
+		t.Negate()
+	}
+
+	return t
+}
+
+func (t *Tuple) Scale(by float64) Tuple {
+	t.X *= by
+	t.Y *= by
+	t.Z *= by
+	t.W *= by
+	return *t
 }
