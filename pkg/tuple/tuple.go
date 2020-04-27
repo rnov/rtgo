@@ -87,3 +87,18 @@ func (t *Tuple) Scale(by float64) Tuple {
 	t.W *= by
 	return *t
 }
+
+func (t Tuple) Length() float64 {
+	l := math.Sqrt(math.Pow(t.X, 2) + math.Pow(t.Y, 2) + math.Pow(t.Z, 2))
+	return l
+}
+
+func (t *Tuple) Normalize() *Tuple {
+
+	if l := t.Length(); l != 0 {
+		t.X /= l
+		t.Y /= l
+		t.Z /= l
+	}
+	return t
+}
