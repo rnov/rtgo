@@ -17,6 +17,7 @@ func TestNewVector(t *testing.T) {
 }
 
 func TestTuple_Equal(t *testing.T) {
+
 	tests := []struct {
 		name   string
 		tpl1   Tuple
@@ -199,6 +200,7 @@ func TestTuple_IsValid(t *testing.T) {
 }
 
 func TestAdd(t *testing.T) {
+
 	tests := []struct {
 		name   string
 		tpl1   Tuple
@@ -235,6 +237,7 @@ func TestAdd(t *testing.T) {
 }
 
 func TestSub(t *testing.T) {
+
 	tests := []struct {
 		name   string
 		tpl1   Tuple
@@ -306,6 +309,122 @@ func TestTuple_Scale(t *testing.T) {
 
 	for _, test := range tests {
 		r := test.tpl1.Scale(test.by)
+		if !r.Equal(test.expTuple) {
+			t.Errorf("Error in test '%v' : got => %v expected => %v", test.name, r, test.expTuple)
+		}
+	}
+}
+
+func TestTuple_Length(t *testing.T) {
+
+	tests := []struct {
+		name   string
+		tpl    Tuple
+		expRes float64
+	}{
+		{
+			name:   "zero vector",
+			tpl:    Tuple{X: 0, Y: 0, Z: 0, W: 0},
+			expRes: 0,
+		},
+		{
+			name:   "X:1, rest zero",
+			tpl:    Tuple{X: 1, Y: 0, Z: 0, W: 0},
+			expRes: 1,
+		},
+		{
+			name:   "Y:1, rest zero",
+			tpl:    Tuple{X: 0, Y: 1, Z: 0, W: 0},
+			expRes: 1,
+		},
+		{
+			name:   "Z:1, rest zero",
+			tpl:    Tuple{X: 0, Y: 0, Z: 1, W: 0},
+			expRes: 1,
+		},
+		{
+			name:   "positive values vector",
+			tpl:    Tuple{X: 1, Y: 2, Z: 3, W: 0},
+			expRes: 3.7416573867739413,
+		},
+		{
+			name:   "negatives values vector",
+			tpl:    Tuple{X: -1, Y: -2, Z: -3, W: 0},
+			expRes: 3.7416573867739413,
+		},
+		{
+			name:   "All Epsilon values vector",
+			tpl:    Tuple{X: Epsilon, Y: Epsilon, Z: Epsilon, W: 0},
+			expRes: 0,
+		},
+		{
+			name:   "All negative Epsilon values vector",
+			tpl:    Tuple{X: -Epsilon, Y: -Epsilon, Z: -Epsilon, W: 0},
+			expRes: 0,
+		},
+	}
+
+	for _, test := range tests {
+		r := test.tpl.Length()
+		diff := r - test.expRes
+		if diff > Epsilon {
+			t.Errorf("Error in test '%v' : got => %v expected => %v, diff regarding Epsiolon %v",
+				test.name, r, test.expRes, diff-Epsilon)
+		}
+	}
+}
+
+func TestTuple_Normalize(t *testing.T) {
+
+	tests := []struct {
+		name     string
+		tpl      Tuple
+		expTuple Tuple
+	}{
+		{
+			name:     "zero vector",
+			tpl:      Tuple{X: 0, Y: 0, Z: 0, W: 0},
+			expTuple: Tuple{X: 0, Y: 0, Z: 0, W: 0},
+		},
+		{
+			name:     "X:1, rest zero",
+			tpl:      Tuple{X: 1, Y: 0, Z: 0, W: 0},
+			expTuple: Tuple{X: 1, Y: 0, Z: 0, W: 0},
+		},
+		{
+			name:     "Y:1, rest zero",
+			tpl:      Tuple{X: 0, Y: 1, Z: 0, W: 0},
+			expTuple: Tuple{X: 0, Y: 1, Z: 0, W: 0},
+		},
+		{
+			name:     "Z:1, rest zero",
+			tpl:      Tuple{X: 0, Y: 0, Z: 1, W: 0},
+			expTuple: Tuple{X: 0, Y: 0, Z: 1, W: 0},
+		},
+		{
+			name:     "positive values vector",
+			tpl:      Tuple{X: 1, Y: 2, Z: 3, W: 0},
+			expTuple: Tuple{X: 1 / 3.7416573867739413, Y: 2 / 3.7416573867739413, Z: 3 / 3.7416573867739413, W: 0},
+		},
+		{
+			name:     "negatives values vector",
+			tpl:      Tuple{X: -1, Y: -2, Z: -3, W: 0},
+			expTuple: Tuple{X: -1 / 3.7416573867739413, Y: -2 / 3.7416573867739413, Z: -3 / 3.7416573867739413, W: 0},
+		},
+		{
+			name:     "All Epsilon values vector",
+			tpl:      Tuple{X: Epsilon, Y: Epsilon, Z: Epsilon, W: 0},
+			expTuple: Tuple{X: Epsilon, Y: Epsilon, Z: Epsilon, W: 0},
+		},
+		{
+			name:     "All negative Epsilon values vector",
+			tpl:      Tuple{X: -Epsilon, Y: -Epsilon, Z: -Epsilon, W: 0},
+			expTuple: Tuple{X: -Epsilon, Y: -Epsilon, Z: -Epsilon, W: 0},
+		},
+	}
+
+	for _, test := range tests {
+		r := test.tpl.Normalize()
 		if !r.Equal(test.expTuple) {
 			t.Errorf("Error in test '%v' : got => %v expected => %v", test.name, r, test.expTuple)
 		}
