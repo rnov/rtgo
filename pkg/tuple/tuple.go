@@ -37,11 +37,11 @@ func (t Tuple) Equal(to Tuple) bool {
 		math.Abs(t.W-to.W) < Epsilon
 }
 
-func Equal(t, t2 Tuple) bool {
-	return math.Abs(t.X-t2.X) < Epsilon &&
-		math.Abs(t.Y-t2.Y) < Epsilon &&
-		math.Abs(t.Z-t2.Z) < Epsilon &&
-		math.Abs(t.W-t2.W) < Epsilon
+func Equal(a, b Tuple) bool {
+	return math.Abs(a.X-b.X) < Epsilon &&
+		math.Abs(a.Y-b.Y) < Epsilon &&
+		math.Abs(a.Z-b.Z) < Epsilon &&
+		math.Abs(a.W-b.W) < Epsilon
 }
 
 func (t *Tuple) Negate() *Tuple {
@@ -56,22 +56,22 @@ func (t Tuple) IsValid() bool {
 	return t.W == 1 || t.W == 0
 }
 
-func Add(t1, t2 Tuple) Tuple {
+func Add(a, b Tuple) Tuple {
 	return Tuple{
-		X: t1.X + t2.X,
-		Y: t1.Y + t2.Y,
-		Z: t1.Z + t2.Z,
-		W: t1.W + t2.W,
+		X: a.X + b.X,
+		Y: a.Y + b.Y,
+		Z: a.Z + b.Z,
+		W: a.W + b.W,
 	}
 }
 
-func Sub(t1, t2 Tuple) Tuple {
+func Sub(a, b Tuple) Tuple {
 
 	t := Tuple{
-		X: t1.X - t2.X,
-		Y: t1.Y - t2.Y,
-		Z: t1.Z - t2.Z,
-		W: t1.W - t2.W,
+		X: a.X - b.X,
+		Y: a.Y - b.Y,
+		Z: a.Z - b.Z,
+		W: a.W - b.W,
 	}
 	if !t.IsValid() {
 		t.Negate()
@@ -104,15 +104,15 @@ func (t *Tuple) Normalize() *Tuple {
 }
 
 // It does make sense to apply it only to vector, W is included in case is misused
-func DotProduct(v1, v2 Tuple) float64 {
-	return v1.X*v2.X + v1.Y*v2.Y + v1.Z*v2.Z + v1.W*v2.W
+func DotProduct(a, b Tuple) float64 {
+	return a.X*b.X + a.Y*b.Y + a.Z*b.Z + a.W*b.W
 }
 
 // It does make sense to apply it only to vector
-func CrossProduct(v1, v2 Tuple) Tuple {
+func CrossProduct(a, b Tuple) Tuple {
 	return Tuple{
-		X: v1.Y*v2.Z - v1.Z*v2.Y,
-		Y: v1.Z*v2.X - v1.X*v2.Z,
-		Z: v1.X*v2.Y - v1.Y*v2.X,
+		X: a.Y*b.Z - a.Z*b.Y,
+		Y: a.Z*b.X - a.X*b.Z,
+		Z: a.X*b.Y - a.Y*b.X,
 	}
 }
