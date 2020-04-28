@@ -308,6 +308,7 @@ func TestTuple_Scale(t *testing.T) {
 	}
 
 	for _, test := range tests {
+
 		r := test.tpl1.Scale(test.by)
 		if !r.Equal(test.expTuple) {
 			t.Errorf("Error in test '%v' : got => %v expected => %v", test.name, r, test.expTuple)
@@ -365,6 +366,7 @@ func TestTuple_Length(t *testing.T) {
 	}
 
 	for _, test := range tests {
+
 		r := test.tpl.Length()
 		diff := r - test.expRes
 		if diff > Epsilon {
@@ -424,9 +426,112 @@ func TestTuple_Normalize(t *testing.T) {
 	}
 
 	for _, test := range tests {
+
 		r := test.tpl.Normalize()
 		if !r.Equal(test.expTuple) {
 			t.Errorf("Error in test '%v' : got => %v expected => %v", test.name, r, test.expTuple)
 		}
 	}
+}
+
+func TestDotProduct(t *testing.T) {
+
+	tests := []struct {
+		name   string
+		tpl1   Tuple
+		tpl2   Tuple
+		expRes float64
+	}{
+		{
+			name:   "zero value tuple",
+			tpl1:   Tuple{X: 0, Y: 0, Z: 0, W: 0},
+			tpl2:   Tuple{X: 4, Y: 2, Z: 3, W: 0},
+			expRes: 0,
+		},
+		{
+			name:   "epsilon dot product",
+			tpl1:   Tuple{X: Epsilon, Y: Epsilon, Z: Epsilon, W: 0},
+			tpl2:   Tuple{X: 1, Y: 1, Z: 1, W: 0},
+			expRes: 3 * Epsilon,
+		},
+		{
+			name:   "positive value tuples",
+			tpl1:   Tuple{X: 1, Y: 2, Z: 3, W: 0},
+			tpl2:   Tuple{X: 4, Y: 2, Z: 3, W: 0},
+			expRes: 17,
+		},
+		{
+			name:   "positive/negative value tuples",
+			tpl1:   Tuple{X: 1, Y: -2, Z: 3, W: 0},
+			tpl2:   Tuple{X: 4, Y: 2, Z: -3, W: 0},
+			expRes: -9,
+		},
+		{
+			name:   "negative value tuples",
+			tpl1:   Tuple{X: -1, Y: -2, Z: -3, W: 0},
+			tpl2:   Tuple{X: -4, Y: -2, Z: -3, W: 0},
+			expRes: 17,
+		},
+	}
+
+	for _, test := range tests {
+
+		r := DotProduct(test.tpl1, test.tpl2)
+		if r != test.expRes {
+			diff := r - test.expRes
+			t.Errorf("Error in test '%v' : got => %v expected => %v, diff regarding Epsiolon %v",
+				test.name, r, test.expRes, diff-Epsilon)
+		}
+	}
+
+}
+
+func TestCrossProduct(t *testing.T) {
+
+	tests := []struct {
+		name   string
+		tpl1   Tuple
+		tpl2   Tuple
+		expRes Tuple
+	}{
+		{
+			name:   "zero value tuple",
+			tpl1:   Tuple{X: 0, Y: 0, Z: 0, W: 0},
+			tpl2:   Tuple{X: 4, Y: 2, Z: 3, W: 0},
+			expRes: Tuple{X: 0, Y: 0, Z: 0, W: 0},
+		},
+		{
+			name:   "epsilon cross product",
+			tpl1:   Tuple{X: Epsilon, Y: Epsilon, Z: Epsilon, W: 0},
+			tpl2:   Tuple{X: 1, Y: 1, Z: 1, W: 0},
+			expRes: Tuple{X: 0, Y: 0, Z: 0, W: 0},
+		},
+		{
+			name:   "positive value tuples",
+			tpl1:   Tuple{X: 1, Y: 2, Z: 3, W: 0},
+			tpl2:   Tuple{X: 4, Y: 2, Z: 3, W: 0},
+			expRes: Tuple{X: 0, Y: 9, Z: -6, W: 0},
+		},
+		{
+			name:   "positive/negative value tuples",
+			tpl1:   Tuple{X: 1, Y: -2, Z: 3, W: 0},
+			tpl2:   Tuple{X: 4, Y: 2, Z: -3, W: 0},
+			expRes: Tuple{X: 0, Y: 15, Z: 10, W: 0},
+		},
+		{
+			name:   "negative value tuples",
+			tpl1:   Tuple{X: -1, Y: -2, Z: -3, W: 0},
+			tpl2:   Tuple{X: -4, Y: -2, Z: -3, W: 0},
+			expRes: Tuple{X: 0, Y: 9, Z: -6, W: 0},
+		},
+	}
+
+	for _, test := range tests {
+
+		r := CrossProduct(test.tpl1, test.tpl2)
+		if !r.Equal(test.expRes) {
+			t.Errorf("Error in test '%v' : got => %v expected => %v, ", test.name, r, test.expRes)
+		}
+	}
+
 }

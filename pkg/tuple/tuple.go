@@ -102,3 +102,17 @@ func (t *Tuple) Normalize() *Tuple {
 	}
 	return t
 }
+
+// It does make sense to apply it only to vector, W is included in case is misused
+func DotProduct(v1, v2 Tuple) float64 {
+	return v1.X*v2.X + v1.Y*v2.Y + v1.Z*v2.Z + v1.W*v2.W
+}
+
+// It does make sense to apply it only to vector
+func CrossProduct(v1, v2 Tuple) Tuple {
+	return Tuple{
+		X: v1.Y*v2.Z - v1.Z*v2.Y,
+		Y: v1.Z*v2.X - v1.X*v2.Z,
+		Z: v1.X*v2.Y - v1.Y*v2.X,
+	}
+}
