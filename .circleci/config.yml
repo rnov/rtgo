@@ -1,11 +1,11 @@
 version: 2
 jobs:
   build:
+    working_directory: /go/src/github.com/rnov/rtgo
     docker:
-      - image: circleci/golang:1.9
+      - image: golang:1
         environment:
           CIRCLE_COVERAGE_REPORT: /tmp/test-output
-    working_directory: /go/src/github.com/rnov/rtgo
     steps:
       - checkout
       - run:
@@ -18,7 +18,7 @@ jobs:
             mkdir -p ${CIRCLE_COVERAGE_REPORT}
       - run:
           name: Run Unit tests
-          command: go test -race -mod=readonly -cover -coverprofile=${CIRCLE_COVERAGE_REPORT}/test-results.out ./...
+          command: go test -mod=readonly -race -cover -coverprofile=${CIRCLE_COVERAGE_REPORT}/test-results.out ./...
       - run:
           name: Upload coverage
           command: goveralls -coverprofile=${CIRCLE_COVERAGE_REPORT}/test-results.out -service=circle-ci -repotoken=${COVERALLS_REPO_TOKEN}
